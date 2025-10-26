@@ -1,12 +1,12 @@
-const http = require('http');
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { engine: hbsEngine } = require('express-handlebars');
 
 const rootDir = require('./util/path');
-const adminData = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+const errorController = require('./controllers/error');
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.set('views', 'views'); // Default value is 'views', so this line is optional
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(rootDir, 'public')));
 
-app.use('/admin', adminData.routes);
+app.use('/admin', adminRoutes);
 app.use('/shop', shopRoutes);
 
 app.get('/', (req, res, next) => {
@@ -33,11 +33,8 @@ app.get('/', (req, res, next) => {
   }); 
 });
 
-app.use((req, res, next) => {
-  res.render('404', { pageTitle: 'Page Not Found'});
-});
+app.use(errorController.display404Page);
 
-// http.createServer(app).listen(4000);
 app.listen(4000);
 
 console.log('Server is listening on port 4000');
