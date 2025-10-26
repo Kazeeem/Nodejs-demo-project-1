@@ -17,3 +17,12 @@ exports.checkoutPage = (req, res, next) => {
     productCSS: true,
   });
 };
+
+exports.ordersPage = (req, res, next) => {
+  res.render('shop/orders', {
+    pageTitle: 'My Orders',
+    path: '/orders',
+    activeCart: true,
+    productCSS: true,
+  });
+};

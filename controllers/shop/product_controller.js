@@ -2,11 +2,14 @@ const ProductModel = require('../../models/product');
 const path = require('../../util/path');
 
 exports.shopPage = (req, res, next) => {
-  res.render('shop/index', {
-    pageTitle: 'Welcome to Demo Shop',
-    path: '/',
-    activeShop: true,
-    productCSS: true,
+  ProductModel.fetchAll(products => {
+    res.render('shop/index', {
+      prods: products,
+      pageTitle: 'Welcome to Demo Shop',
+      path: '/',
+      activeShop: true,
+      productCSS: true,
+    });
   });
 }
 
@@ -35,8 +38,9 @@ exports.getProductDetails = (req, res, next) => {
         productCSS: true,
       });
     } else {
-      res.status(404).render('shop/404', {
+      res.render('shop/404', {
         pageTitle: 'Product Not Found',
+        path: '/404',
       });
     }
   });
