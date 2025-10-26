@@ -1,9 +1,9 @@
 const http = require('http');
 const path = require('path');
-
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const rootDir = require('./util/path');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
@@ -23,7 +23,7 @@ app.get('/', (req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, 'views', '404.html'));
+  res.sendFile(path.join(rootDir, 'views', '404.html'));
 });
 
 http.createServer(app).listen(4000);
