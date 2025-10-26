@@ -17,13 +17,13 @@ exports.createNewProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  const products = ProductModel.fetchAll();
-  
-  res.render('shop', {
-    prods: products,
-    hasProducts: products.length > 0,
-    pageTitle: 'All Products - Shop',
-    activeShop: true,
-    productCSS: true,
+  ProductModel.fetchAll(products => {
+    res.render('shop', {
+      prods: products,
+      hasProducts: products.length > 0,
+      pageTitle: 'All Products - Shop',
+      activeShop: true,
+      productCSS: true,
+    });
   });
 };
