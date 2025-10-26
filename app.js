@@ -25,15 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', adminRoutes);
-app.use('/shop', shopRoutes);
-
-app.get('/', (req, res, next) => {
-  res.status(200).json({ 
-    success: true,
-    message: 'Hello from Express server!',
-    data: null,
-  }); 
-});
+app.use(shopRoutes);
 
 app.use(errorController.display404Page);
 
