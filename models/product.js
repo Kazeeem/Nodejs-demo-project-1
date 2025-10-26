@@ -13,6 +13,8 @@ module.exports = class Product {
   }
 
   save() {    
+    this.id = Math.random().toString();
+
     fs.readFile(storagePath, (err, fileContent) => {
       let products = [];
 
@@ -26,7 +28,7 @@ module.exports = class Product {
       }
 
       products.push(this);
-      fs.writeFile(storagePath, JSON.stringify(products), (err) => {
+      fs.writeFile(storagePath, JSON.stringify(products, null, 2), (err) => {
         console.log(err);
       });
     });
@@ -50,6 +52,13 @@ module.exports = class Product {
         // Invalid or empty JSON — return empty list instead of throwing
         callback([]);
       }
+    });
+  }
+
+  static findById(id, callback) {
+    Product.fetchAll(products => {
+      const product = products.find(p => p.id === id);
+      callback(product);
     });
   }
 }

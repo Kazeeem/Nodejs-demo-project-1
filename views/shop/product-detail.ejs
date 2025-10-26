@@ -5,7 +5,17 @@
 <body>
    <%- include('../includes/navigation.ejs') %>
 
-    <main>
-        <h1>Product Details Page</h1>
+    <main class="centered">
+        <h1><%= product.title %></h1>
+         <hr />
+         <div>
+            <img class="product-detail__image" src="<%= product.imageUrl %>" alt="<%= product.title %>">
+            <div class="product-detail__info">
+                <h2 class="product-detail__price">$<%= product.price %></h2>
+                <p class="product-detail__description"><%= product.description %></p>
+                
+                <%- include('../includes/add-to-cart.ejs') %>
+            </div>
+         </div>
     </main>
 <%- include('../includes/end.ejs') %>

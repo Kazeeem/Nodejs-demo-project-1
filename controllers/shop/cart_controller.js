@@ -1,4 +1,5 @@
 const ProductModel = require('../../models/product');
+const CartModel = require('../../models/cart');
 
 exports.cartPage = (req, res, next) => {
   res.render('shop/cart', {
@@ -7,6 +8,17 @@ exports.cartPage = (req, res, next) => {
     activeCart: true,
     productCSS: true,
   });
+};
+
+exports.addToCart = (req, res, next) => {
+  const prodId = req.body.productId;
+
+  ProductModel.findById(prodId, product => {
+    CartModel.addProduct(prodId, product.price);
+  });
+
+  console.log('Added to cart');
+  res.redirect('/cart');
 };
 
 exports.checkoutPage = (req, res, next) => {
