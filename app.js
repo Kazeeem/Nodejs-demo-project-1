@@ -1,4 +1,6 @@
 const http = require('http');
+const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -9,8 +11,8 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(adminRoutes);
-app.use(shopRoutes);
+app.use('/admin', adminRoutes);
+app.use('/shop', shopRoutes);
 
 app.get('/', (req, res, next) => {
   res.status(200).json({ 
@@ -21,11 +23,7 @@ app.get('/', (req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  res.status(404).json({
-    success: false,
-    message: 'Resource not found',
-    data: null,
-  });
+  res.sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
 http.createServer(app).listen(4000);
