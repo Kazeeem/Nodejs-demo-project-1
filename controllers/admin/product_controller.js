@@ -71,3 +71,17 @@ exports.updateProduct = (req, res, next) => {
   updatedProduct.save();
   res.redirect('/admin/products');
 };
+
+exports.deleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+
+  ProductModel.findById(prodId, product => {
+    if (!product) {
+      return res.redirect('/');
+    }
+
+    ProductModel.delete(prodId, () => {
+      res.redirect('/admin/products');
+    });
+  });
+};
