@@ -10,7 +10,17 @@ module.exports = class Product {
   }
 
   save() {
+    if (this.id) {
+      return db.execute(
+        'UPDATE products SET title = ?, price = ?, imageUrl = ?, description = ? WHERE id = ? LIMIT 1',
+        [this.title, this.price, this.imageUrl, this.description, this.id]
+      );
+    }
     
+    return db.execute(
+      'INSERT INTO products (title, price, imageUrl, description) VALUES (?, ?, ?, ?)',
+      [this.title, this.price, this.imageUrl, this.description]
+    );
   }
 
   static fetchAll() {
@@ -18,10 +28,10 @@ module.exports = class Product {
   }
 
   static findById(id) {
-    
+    return db.execute('SELECT * FROM products WHERE products.id = ? LIMIT 1', [id]);
   }
 
-  static delete(id) {
-    
+  static deleteById(id) {
+    return db.execute('DELETE FROM products WHERE products.id = ? LIMIT 1', [id]);
   }
 }

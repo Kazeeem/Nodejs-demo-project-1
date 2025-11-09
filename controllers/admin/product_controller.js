@@ -2,7 +2,7 @@ const ProductModel = require('../../models/product');
 
 exports.getAllProducts = (req, res, next) => {
   ProductModel.fetchAll()
-    .then(([rows, fieldData]) => {
+    .then(([rows]) => {
       res.render('admin/products', {
         prods: rows,
         path: '/admin/products',
@@ -35,8 +35,13 @@ exports.createNewProduct = (req, res, next) => {
   const price = req.body.price;
 
   const product = new ProductModel(null, title, imageUrl, description, price);
-  product.save();
-  res.redirect('/');
+  product.save()
+    .then(() => {
+      res.redirect('/');
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 exports.editProductPage = (req, res, next) => {
@@ -47,21 +52,27 @@ exports.editProductPage = (req, res, next) => {
   }
 
   const prodId = req.params.productId;
-  ProductModel.findById(prodId, product => {
-    if (!product) {
-      return res.redirect('/');
-    }
 
-    res.render('admin/edit-product', {
-      pageTitle: 'Edit Product - Admin',
-      path: '/admin/edit-product',
-      formsCSS: true,
-      productCSS: true,
-      activeAddProduct: true,
-      editing: editMode,
-      product: product,
+  ProductModel.findById(prodId)
+    .then(([rows]) => {
+      if (rows.length === 0) {
+        return res.render('404');
+      }
+      else {
+        res.render('admin/edit-product', {
+          pageTitle: 'Edit Product - Admin',
+          path: '/admin/edit-product',
+          formsCSS: true,
+          productCSS: true,
+          activeAddProduct: true,
+          editing: editMode,
+          product: rows[0],
+        });
+      }
+    })
+    .catch(err => {
+      console.log(err);
     });
-  });
 };
 
 exports.updateProduct = (req, res, next) => {
@@ -79,13 +90,22 @@ exports.updateProduct = (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
 
-  ProductModel.findById(prodId, product => {
-    if (!product) {
-      return res.redirect('/');
-    }
-
-    ProductModel.delete(prodId, () => {
-      res.redirect('/admin/products');
-    });
+  ProductModel.findById(prodId)
+    .then(([rows]) => {
+      if (rows.length === 0) {
+        return res.render('404');
+      }
+      else {
+        ProductModel.deleteById(rows[0].id)
+          .then(() => {
+            res.redirect('/admin/products');
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    })
+    .catch(err => {
+      console.log(err);
   });
 };
