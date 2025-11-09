@@ -1,16 +1,20 @@
 const ProductModel = require('../../models/product');
 
 exports.getAllProducts = (req, res, next) => {
-  ProductModel.fetchAll(products => {
-    res.render('admin/products', {
-      prods: products,
-      path: '/admin/products',
-      hasProducts: products.length > 0,
-      pageTitle: 'Admin Products',
-      activeAdminProducts: true,
-      productCSS: true,
+  ProductModel.fetchAll()
+    .then(([rows, fieldData]) => {
+      res.render('admin/products', {
+        prods: rows,
+        path: '/admin/products',
+        hasProducts: rows.length > 0,
+        pageTitle: 'Admin Products',
+        activeAdminProducts: true,
+        productCSS: true,
+      });
+    })
+    .catch(err => {
+      console.log(err);
     });
-  });
 }
 
 exports.createProductPage = (req, res, next) => {
